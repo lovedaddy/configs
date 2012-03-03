@@ -15,6 +15,8 @@ set incsearch
 set linespace=1
 set novisualbell
 set nobackup
+set nowritebackup
+set noswapfile 
 set noerrorbells
 
 set nu
