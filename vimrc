@@ -27,8 +27,8 @@ set foldenable
 
 au BufRead,BufNewFile *.rb,*.rhtml set shiftwidth=2
 au BufRead,BufNewFile *.rb,*.rhtml set softtabstop=2
-au BufRead,BufNewFile *.rb,*.rhtml set autoindent=2
-au BufRead,BufNewFile *.rb,*.rhtml set smartindent=2
+au BufRead,BufNewFile *.rb,*.rhtml set autoindent
+au BufRead,BufNewFile *.rb,*.rhtml set smartindent
 
 au BufRead,BufNewFile *.go set shiftwidth=8
 au BufRead,BufNewFile *.go set softtabstop=8
