@@ -1,9 +1,3 @@
 [user]
 	email = greg.loscombe@gmail.com
 	name = Gregory Loscombe
-[giggle]
-	main-window-maximized = false
-	main-window-geometry = 960x676+512+258
-	history-view-vpane-position = 365
-	main-window-view = HistoryView
-	file-view-vpane-position = 191
