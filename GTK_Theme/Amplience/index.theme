@@ -1,0 +1,8 @@
+[X-GNOME-Metatheme]
+Name=Amplience
+Type=X-GNOME-Metatheme
+Comment=Optimized for size-constrained displays
+Encoding=UTF-8
+GtkTheme=Amplience
+MetacityTheme=Clearlooks
+IconTheme=gnome
