@@ -103,7 +103,7 @@
  * menuitem *
  ************/
 .menubar .menuitem {
-    padding: 3px 6px;
+    padding: 2px;
     color: @theme_fg_dark_color;
     text-shadow: 1px 1px @theme_shadow_dark_color;
 }

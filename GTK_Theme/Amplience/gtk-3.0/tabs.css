@@ -61,44 +61,43 @@ GtkNotebook {
 }
 
 .notebook tab.top {
-    padding: 3px 5px 3px 5px;
+    padding: 1px 1px 1px 1px;
     border-bottom-width: 0px;
     box-shadow: none;    
 }
 
 .notebook tab.top:active {
-    padding: 4px 5px 4px 5px;
-
+    padding: 2px 1px 1px 1px;
 }
 
 .notebook tab.bottom {
-    padding: 2px 5px 5px 5px;
+    padding: 1px 1px 1px 1px;
     border-top-width: 0px;
     box-shadow: none;
 }
 
 .notebook tab.bottom:active {
-    padding: 3px 5px 6px 5px;
+    padding: 1px 1px 2px 1px;
 }
 
 .notebook tab.right {
-    padding: 1px 6px 1px 5px;
+    padding: 1px 1px 1px 1px;
     border-left-width: 0px; 
     box-shadow: none;
 }
 
 .notebook tab.right:active {
-    padding: 1px 7px 1px 6px;
+    padding: 1px 2px 1px 1px;
 }
 
 .notebook tab.left {
-    padding: 1px 5px 1px 6px;
+    padding: 1px 1px 1px 1px;
     border-right-width: 0px; 
     box-shadow: none;
 }
 
 .notebook tab.left:active {
-    padding: 1px 6px 1px 7px;
+    padding: 1px 1px 1px 2px;
 }
 
 /* Notebook - close button */
