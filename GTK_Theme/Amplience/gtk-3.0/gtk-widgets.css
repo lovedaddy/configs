@@ -759,7 +759,7 @@ GtkScrolledWindow.frame {
  ***********/
 .button,
 .button.menuitem.menubar {
-    padding: 3px 6px;
+    padding: 1px 1px;
 }
 
 .button GtkLabel {
