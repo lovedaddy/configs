@@ -1406,10 +1406,6 @@ GtkHandleBox,
 }
 
 .toolbar GtkLabel {
-/* Da problemas con button-menu-menuitem nautilus 3.6
-	color: 	shade(@theme_fg_color, 1.10);
-	text-shadow: 0px 1px @theme_shadow_color;
-*/
 }
 
 .toolbar.menubar GtkLabel,
@@ -1455,7 +1451,6 @@ GtkHandleBox,
 
 MathWindow .button:hover,
 MathWindow .button,
-.toolbar NautilusPathBar .button,
 .toolbar.menubar .button,
 .toolbar .raised .button,
 .toolbar .raised.button {
@@ -1490,7 +1485,6 @@ MathWindow .button,
 
 }
 
-.toolbar NautilusPathBar .button:insensitive,
 .toolbar .button.raised.linked:insensitive,
 .toolbar .raised.linked .button:insensitive,
 .toolbar .button.raised.linked:insensitive:active,
@@ -1520,7 +1514,6 @@ MathWindow .button,
 }
 
 
-.toolbar NautilusPathBar .button:hover,
 .toolbar.menubar .button:hover,
 .toolbar .raised .button:hover,
 .toolbar .raised.button:hover {
@@ -1552,7 +1545,6 @@ NemoWindow .primary-toolbar.toolbar .button:active,
 NemoWindow .primary-toolbar.toolbar .button:hover:active,
 MathWindow .button:active,
 MathWindow .button:hover:active,
-.toolbar NautilusPathBar .button:active,
 .toolbar.menubar .button:active,
 .toolbar .raised .button:active,
 .toolbar .raised .button:hover:active,
@@ -1588,7 +1580,6 @@ MathWindow .button:hover:active,
 }
 
 /* setup shadows */
-.toolbar NautilusPathBar .button GtkLabel,
 .toolbar .raised .button GtkLabel,
 .toolbar .raised.button GtkLabel {
 	color: @theme_fg_dark_color;
@@ -1596,7 +1587,6 @@ MathWindow .button:hover:active,
 
 }
 
-.toolbar NautilusPathBar .button,
 .toolbar .raised .button,
 .toolbar .raised.button {
     icon-shadow:  1px  1px @theme_shadow_dark_color;
@@ -1852,11 +1842,6 @@ GtkImage:insensitive {
  * drawing area *
  ****************/
 GtkDrawingArea {
-	/* ubuntu-12 */
-	/* background-color: @theme_bg_color;  */
- 
-	/* custom user interface element, ej. imagen selector wallpaper
-    background-color: @transparent; */
 }
 
 /************
@@ -1867,8 +1852,6 @@ GtkViewport {
     border-style: none;
 	padding: 0px;
 
-	/* ubuntu-12 */ 
-	/* Color fondo config systema y gnome-tweak-tools */
 	background-color: shade(@theme_bg_color, 1.00);
 }
 
@@ -1893,12 +1876,10 @@ GtkIconView.content-view.check:active {
 }
 
 GtkIconView {
-	/* Vista iconos gnome-control-center */
 	border-width: 0px;
     border-style: none;
     padding: 10px;	
 
-	/* ubuntu-12 */ 
 	background-color: @theme_bg_color;
 	background-image: -gtk-gradient (linear,
                                      left top, left bottom,
@@ -2098,8 +2079,6 @@ row:selected:focused {
 }
 
 .cell:hover {
-	/* Poner el mismo fondo que .view para evitar mouse-over en listas */
-	/*background-color: @theme_base_color;*/
     background-color: alpha(@theme_base_color, 0.0);
 
 }
