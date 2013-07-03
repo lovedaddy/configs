@@ -4,6 +4,9 @@ set nocompatible
 set guioptions-=m
 set guioptions-=T
 
+" set the old regex engine whilst its totally broken with Ruby
+set re=1
+
 " setup all the defaults for tabs
 set expandtab
 set nowrap
@@ -49,7 +52,7 @@ set t_Co=265
 colorscheme molokai
 
 " enable code folding
-set foldenable
+"set foldenable
 
 set linespace=0
 
