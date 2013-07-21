@@ -6,12 +6,13 @@
     background-clip: padding-box;
 
     -GtkArrow-arrow-scaling: 0.5;
+
     -GtkButton-child-displacement-x: 1;
     -GtkButton-child-displacement-y: 1;
-    -GtkButton-default-border: 0;
+    -GtkButton-default-border: 0, 0, 0, 0;
     -GtkButton-image-spacing: 0;
     -GtkButton-interior-focus: true;
-    -GtkButton-inner-border: 1;
+
     -GtkCheckButton-indicator-size: 15;
     -GtkCheckMenuItem-indicator-size: 12;
     -GtkEntry-inner-border: 1;
@@ -75,7 +76,7 @@
     **********/
     *:insensitive {
     color: mix (@theme_fg_color, @theme_bg_color, 0.4);
-    text-shadow: 1 1 alpha (@theme_base_color, 0.4);
+    text-shadow: 1px 1px alpha (@theme_base_color, 0.4);
     }
 
     *:active {
