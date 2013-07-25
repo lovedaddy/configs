@@ -1,0 +1,5 @@
+/* Modify to quickly make colorswaps */
+@define-color theme_base_color #ffffff,
+
+@define-color theme_bg_color #edeceb;
+@define-color theme_fg_color #000000;

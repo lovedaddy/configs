@@ -5,7 +5,7 @@ set guioptions-=m
 set guioptions-=T
 
 " set the old regex engine whilst its totally broken with Ruby
-set re=1
+" set re=1
 
 " setup all the defaults for tabs
 set expandtab
