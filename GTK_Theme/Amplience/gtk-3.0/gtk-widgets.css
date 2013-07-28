@@ -7,8 +7,8 @@
 
     -GtkArrow-arrow-scaling: 0.5;
 
-    -GtkButton-child-displacement-x: 1;
-    -GtkButton-child-displacement-y: 1;
+    -GtkButton-child-displacement-x: 0;
+    -GtkButton-child-displacement-y: 0;
     -GtkButton-default-border: 0, 0, 0, 0;
     -GtkButton-image-spacing: 0;
     -GtkButton-interior-focus: true;
@@ -68,45 +68,28 @@
     
     GtkWindow {
       color: @theme_fg_color;
+      background-color: @theme_bg_color;
     }
 
-    * {
-    /* inherit the color from parent by default */
-      color: inherit;
+    GtkWindow:hover {
+      color: @theme_fg_color;
       background-color: @theme_bg_color;
     }
 
     *:insensitive {
-      background-color: @insensitive_bg_color;
-      color: @insensitive_fg_color;
-      text-shadow: 1px 1px @insensitive_text_shadow_color;
-      border-color: @insensitive_border_color;
+      color: @theme_fg_color;
+      background-color: darker(@theme_bg_color);
     }
 
-    *:active {
-    background-color: shade (@theme_bg_color, 0.9);
-    }
-
-    *:active:hover:insensitive {
-    }
-
-    *:active:insensitive {
-    }
-
-    *:hover {
-    }
-
-    *:hover:insensitive {
-    }
-
-    *:selected,
-    *:selected:focus {
-      background-color: @theme_selected_bg_color;
-      color: @theme_selected_fg_color;
-    }
-    
     GtkButton {
-      color: @text_color;
-      border-style: solid;
-      border-color: transparent;
+      border-radius: 2px;
+      border-width: 3px;
+    }
+
+    GtkButton:hover {
+      color: rgba(255, 0, 0, 0.4);
+      /* background-color: @theme_bg_color; */
+      background-color: shade(@theme_bg_color, 0.97);
+      border-style: dashed;
+      border-color: rgb(0,255,0);
     }

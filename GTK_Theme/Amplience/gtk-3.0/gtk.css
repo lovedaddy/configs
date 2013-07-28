@@ -1,14 +1,14 @@
 @import url("gtk-variant.css");
 
 /* default color scheme */
-@define-color bg_color #edeceb;
-@define-color fg_color #000000;
-@define-color base_color #ffffff;
-@define-color text_color #1a1a1a;
-@define-color selected_bg_color #86abd9;
-@define-color selected_fg_color #ffffff;
-@define-color tooltip_bg_color #f5f5b5;
-@define-color tooltip_fg_color #000000;
+@define-color bg_color @theme_bg_color;
+@define-color fg_color @theme_fg_color;
+@define-color base_color @theme_base_color;
+@define-color text_color @theme_text_color;
+@define-color selected_bg_color @theme_selected_bg_color;
+@define-color selected_fg_color @theme_selected_fg_color;
+@define-color tooltip_bg_color @theme_tooltip_bg_color;
+@define-color tooltip_fg_color @theme_tooltip_fg_color;
 
 @define-color insensitive_bg_color #edeceb;
 @define-color insensitive_fg_color #000000;

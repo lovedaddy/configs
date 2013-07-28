@@ -1,0 +1,9 @@
+Notes:-
+
+For a GtkButton
+Focused is when you tab into it
+Hover is when you move the mouse cursor into it
+Active is when its being 'pressed down' or togged on (radio, tick)
+Insensitive is when you can't interact with it (ie disabled)
+Selected?
+Inconsistent?
