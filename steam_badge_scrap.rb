@@ -107,5 +107,6 @@ have_for_trade(@exclude, @dups_only)
 wants_from_trade(@wants)
 
 puts @output
+File.open("trade.txt", 'w') {|f| f.write(@output) }
 
 @b.close
