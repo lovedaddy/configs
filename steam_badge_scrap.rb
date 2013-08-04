@@ -25,22 +25,60 @@ require "yaml"
   #  game_ids.push(url.href.split("/")[6])
 #end
 
+class Trader
+  attr_reader :steam_id, :games_list, :have_excludes, :wants_include, :have_dups_only, :cards_hash
+  
+  def initialize(steam_id, game_list, have_excludes, want_includes, force_rebuild_card_cache)
+    @steam_id = steam_id
+    @game_list = game_list
+    @have_excludes = have_excludes
+    @want_includes = want_includes
+    @have_dups_only = false
+    @browser = ""
+    @cards_hash = Hash.new()
+    @output = String.new()
+    @forum_intro = String.new()
+    @force_rebuild_card_cache = force_rebuild_card_cache
+  end
+ 
+  def populate_card_hash
+    if card_cash_rebuild_need?
+      self.rebuild_card_cache()
+    else
+      self.get_card_cache
+    end
+  end
+
+  def card_cash_rebuild_need?
+    if not File.exists?("card_cache.json") or @force_rebuild_card_cache
+      return true
+    else
+      return false
+    end
+  end
+
+  def get_card_cache
+    @cards_hash = JSON.parse(File.read("card_cache.json")).to_h
+  end
 
   def rebuild_card_cache()
-    @b = Watir::Browser.new(:firefox)
-    @game_ids.each do |id|
-      @b.goto("http://steamcommunity.com/id/ql6wlld/gamecards/#{id}/")
-      populate_card_stats
+    profile = Selenium::WebDriver::Firefox::Profile.new
+    profile["permissions.default.image"] = 2
+    @browser = Watir::Browser.new(:firefox, :profile => profile)
+    @game_list.each do |game_id|
+      @browser.goto("http://steamcommunity.com/id/#{@steam_id}/gamecards/#{game_id}/")
+      self.populate_card_stats()
     end
-    @b.close
+    File.open("card_cache.json", 'w') {|f| f.write(@cards_hash.to_json) }
+    @browser.close
   end
 
   def populate_card_stats()
-    game = @b.elements(:class => "profile_small_header_location")[1].text
+    current_game = @browser.elements(:class => "profile_small_header_location")[1].text
 
-    @card_stats[game] = []
+    @cards_hash[current_game] = []
 
-    badge_grid = @b.element(:class => "badge_detail_tasks")
+    badge_grid = @browser.element(:class => "badge_detail_tasks")
 
     badges = badge_grid.elements(:class => "badge_card_set_card")
 
@@ -48,29 +86,24 @@ require "yaml"
       badge_text = badge.elements(:class => "badge_card_set_text")
       badge_details =  badge_text[0].text.split("\n")
 
-      # puts "badge_details pre fiddle #{badge_details}"
-
       card_index = badge_text[1].text[0].to_i
 
-      # puts "card index #{card_index}"
-
       card_hash = Hash.new()
-  
+      
       if badge_details.length > 1
         card_hash = {"badge name" => badge_details[1], "quantity" => badge_details[0][1...-1].to_i}
       else
         card_hash = {"badge name" => badge_details[0], "quantity" => 0}
       end
 
-      @card_stats[game][card_index - 1] = card_hash
+      @cards_hash[current_game][card_index - 1] = card_hash
     end
-    File.open("card_cache.json", 'w') {|f| f.write(@card_stats.to_json) }
   end
 
   def have_for_trade(games, dups_only = false)
     i = 0
     @output << "Have for trade:\n\n"
-    @card_stats.each do |game, cards|
+    @cards_hash.each do |game, cards|
       if not games.include?(game)
         @output << "#{game}:\n"
         cards.each do |card_details|
@@ -89,7 +122,7 @@ require "yaml"
 
   def wants_from_trade(games)
     @output << "Want from trade:\n\n"
-    @card_stats.each do |game, cards|
+    @cards_hash.each do |game, cards|
       if games.include?(game)
         @output << "#{game}:\n"
         cards.each do |card_details|
@@ -100,31 +133,30 @@ require "yaml"
     end
   end
 
-
-  def set_trade_intro(intro = "")
+  def add_intro(intro = "")
     intro = File.read("trade_intro.txt") if File.exists?("trade_intro.txt")
     @output << intro
   end
 
+  def write_output
+    File.open("trade_n.txt", 'w') {|f| f.write(@output) }
+  end
 
-@card_stats = Hash.new()
+end
 
-@wants = ["Portal 2", "System Shock 2"]
-@exclude = ["Portal 2", "System Shock 2"]
+
+@wants = ["System Shock 2"]
+@exclude = []
 @dups_only = false
-
-@output = String.new()
-
 do_rebuild_card_cache = false
 
-rebuild_card_cache if do_rebuild_card_cache or not File.exist?("card_cache.json")
-@card_stats = JSON.parse(File.read("card_cache.json")).to_h
 
-puts "Total games with trading cards: #{@card_stats.length}"
+t = Trader.new("ql6wlld", @game_ids, @excludes, @wants, do_rebuild_card_cache)
 
-set_trade_intro()
-have_for_trade(@exclude, @dups_only)
-wants_from_trade(@wants)
+t.populate_card_hash
+t.add_intro()
+t.have_for_trade(@exclude, @dups_only)
+t.wants_from_trade(@wants)
+t.write_output
 
-File.open("trade.txt", 'w') {|f| f.write(@output) }
-
+puts "Total games with trading cards: #{t.cards_hash.length}"
