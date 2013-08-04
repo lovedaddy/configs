@@ -14,7 +14,7 @@ require "yaml"
 @game_ids = Array.new()
 
 @game_ids = ["550", "620", "730", "207610", "107100", "55230", "4000", "1250", "98200", "201790", "300", "219150", "233740", "220860", "440", "91310", "3830", "211360", "105600", "49600", "204300", "245070", "40800", "238210", "35720", "41800", "225260", "8930", "4920", "212680", "108710", "41070", "200710", "63710", "107200", "214560", "113200", "104900", "72850", "20920", "220"]
-#@game_ids = ["550", "620", "238210"]
+#@game_ids = ["1250", "550", "620", "238210"]
 
 
 #b.link(:class => "badge_row_overlay").each do |game|
@@ -86,7 +86,8 @@ class Trader
       badge_text = badge.elements(:class => "badge_card_set_text")
       badge_details =  badge_text[0].text.split("\n")
 
-      card_index = badge_text[1].text[0].to_i
+      card_index = badge_text[1].text.split(" ")[0].to_i
+      #puts "card index #{card_index}"
 
       card_hash = Hash.new()
       
@@ -139,16 +140,16 @@ class Trader
   end
 
   def write_output
-    File.open("trade_n.txt", 'w') {|f| f.write(@output) }
+    File.open("trade.txt", 'w') {|f| f.write(@output) }
   end
 
 end
 
 
-@wants = ["System Shock 2"]
+@wants = ["System Shock 2", "Killing Floor"]
 @exclude = []
 @dups_only = false
-do_rebuild_card_cache = false
+do_rebuild_card_cache = true
 
 
 t = Trader.new("ql6wlld", @game_ids, @excludes, @wants, do_rebuild_card_cache)
