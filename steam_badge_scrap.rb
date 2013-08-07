@@ -69,8 +69,12 @@ class Trader
       @browser.goto("http://steamcommunity.com/id/#{@steam_id}/gamecards/#{game_id}/")
       self.populate_card_stats()
     end
-    File.open("card_cache.json", 'w') {|f| f.write(@cards_hash.to_json) }
+    self.write_card_cache
     @browser.close
+  end
+
+  def write_card_cache
+    File.open("card_cache.json", 'w') {|f| f.write(@cards_hash.to_json) }
   end
 
   def populate_card_stats()
@@ -143,10 +147,70 @@ class Trader
     File.open("trade.txt", 'w') {|f| f.write(@output) }
   end
 
+  def get_items_value(item_list)
+    @market_hash = Hash.new()
+    @q = 0
+    @p = 0.0
+    profile = Selenium::WebDriver::Firefox::Profile.new
+    profile["permissions.default.image"] = 2
+    @browser = Watir::Browser.new(:firefox, :profile => profile)
+    item_list.each do |item_string|
+      query_hash = Hash.new()
+      query_hash["q"] = item_string.gsub(" ", "+")
+      query_string = self.create_querystring_from_hash(query_hash)
+      @browser.goto("http://steamcommunity.com/market/search#{query_string}")
+      if @browser.div(:id => "result_0")
+        puts "Found an result_0 for item #{item_string}"
+        result_0 = @browser.div(:id => "result_0")
+        detail_text = result_0.element(:class => "market_listing_right_cell").text.split("\n")
+        @q = detail_text[0].to_i
+        @p = detail_text[2][1...-4].to_f
+        puts "Quantity #{@q}"
+        puts "Price #{@p}"
+      else
+        puts "I didn't find a result_0 for item #{item_string}"
+        @q = 0
+        @p = 0.0
+      end
+      @market_hash[item_string] = [@q, @p]
+    end
+    @browser.close
+    return @market_hash
+  end
+
+  def create_querystring_from_hash(hash)
+    query_string = String.new()
+    query_string << "?"
+    hash.each {|key,value| query_string << "#{key}=#{value}"}
+    return query_string
+  end
+
+  def merge_market_data
+    @cards_hash.each do |game|
+      existance_value = String.new()
+      game[1].each do |badge|
+        existance_value = badge["badge name"]
+        if @market_hash.has_key?(existance_value)
+          badge["market data"] = @market_hash[existance_value]
+        end
+      end
+    end
+  end
+
+  def list_all_cards
+    full_card_list = Array.new()
+    @cards_hash.each do |game|
+      game[1].each do |badge|
+        full_card_list.push(badge["badge name"])
+      end
+    end
+    return full_card_list
+  end
+  
 end
 
 
-@wants = ["System Shock 2", "Killing Floor"]
+@wants = ["System Shock 2"]
 @exclude = []
 @dups_only = false
 do_rebuild_card_cache = true
@@ -159,5 +223,9 @@ t.add_intro()
 t.have_for_trade(@exclude, @dups_only)
 t.wants_from_trade(@wants)
 t.write_output
+#t.list_all_cards
+#t.get_items_value(t.list_all_cards)
+#t.merge_market_data
+#t.write_card_cache
 
 puts "Total games with trading cards: #{t.cards_hash.length}"
