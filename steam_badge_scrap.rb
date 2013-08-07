@@ -1,8 +1,9 @@
 #!/usr/bin/ruby
 #
-require "watir-webdriver"
 require "json"
 require "yaml"
+require "nokogiri"
+require "httparty"
 
 # steam you fucking POS, why am I logged out everytime.
 # I was going to just make an array of all my games and goto them from the main page
@@ -14,7 +15,7 @@ require "yaml"
 @game_ids = Array.new()
 
 @game_ids = ["550", "620", "730", "207610", "107100", "55230", "4000", "1250", "98200", "201790", "300", "219150", "233740", "220860", "440", "91310", "3830", "211360", "105600", "49600", "204300", "245070", "40800", "238210", "35720", "41800", "225260", "8930", "4920", "212680", "108710", "41070", "200710", "63710", "107200", "214560", "113200", "104900", "72850", "20920", "220", "219740", "219190", "203210", "93200", "219200", "18500"]
-#@game_ids = ["1250", "550", "620", "238210"]
+#@game_ids = ["238210"]
 
 
 #b.link(:class => "badge_row_overlay").each do |game|
@@ -62,15 +63,11 @@ class Trader
   end
 
   def rebuild_card_cache()
-    profile = Selenium::WebDriver::Firefox::Profile.new
-    profile["permissions.default.image"] = 2
-    @browser = Watir::Browser.new(:firefox, :profile => profile)
     @game_list.each do |game_id|
-      @browser.goto("http://steamcommunity.com/id/#{@steam_id}/gamecards/#{game_id}/")
+      @url = "http://steamcommunity.com/id/#{@steam_id}/gamecards/#{game_id}/"
       self.populate_card_stats()
     end
     self.write_card_cache
-    @browser.close
   end
 
   def write_card_cache
@@ -78,30 +75,35 @@ class Trader
   end
 
   def populate_card_stats()
-    current_game = @browser.elements(:class => "profile_small_header_location")[1].text
+    html = HTTParty.get(@url).body
+    doc = Nokogiri::HTML(html)
 
+    current_game = doc.css('.profile_small_header_location')[1].text
     @cards_hash[current_game] = []
 
-    badge_grid = @browser.element(:class => "badge_detail_tasks")
-
-    badges = badge_grid.elements(:class => "badge_card_set_card")
-
+    badges = doc.css('.badge_card_set_card')
     badges.each do |badge|
-      badge_text = badge.elements(:class => "badge_card_set_text")
-      badge_details =  badge_text[0].text.split("\n")
-
-      card_index = badge_text[1].text.split(" ")[0].to_i
-      #puts "card index #{card_index}"
-
-      card_hash = Hash.new()
       
-      if badge_details.length > 1
-        card_hash = {"badge name" => badge_details[1], "quantity" => badge_details[0][1...-1].to_i}
+      badge_text = badge.css('.badge_card_set_text')[0].text.strip
+      badge_text = badge_text.delete("\t").delete("\n").delete("\r")
+      badge_text.scan(/\(\d+\)/) { |number| badge_text = badge_text.delete(number) }
+      
+      badge_quantity = badge.css('.badge_card_set_text_qty').text
+      if badge_quantity == nil
+        badge_quantity = 0
       else
-        card_hash = {"badge name" => badge_details[0], "quantity" => 0}
+        badge_quantity = badge_quantity[1...-1].to_i
       end
+      
+      badge_index_and_series = badge.css('.badge_card_set_text')[1].text.strip
+      
+      badge_index, badge_series = badge_index_and_series.split(",")
+      badge_current_index = badge_index.split(" of ")[0].to_i
+      badge_total_index = badge_index.split(" of ")[1].to_i
+      badge_current_series = badge_series.split(" ")[1].to_i
 
-      @cards_hash[current_game][card_index - 1] = card_hash
+      @cards_hash[current_game][badge_current_index - 1] = {"badge name" => badge_text, "quantity" => badge_quantity}
+
     end
   end
 
